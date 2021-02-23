@@ -1,0 +1,42 @@
+.center {
+    margin: 50px calc(50% - 600px);
+}
+
+.products,
+.basket {
+    display: flex;
+    justify-content: space-between;
+}
+
+.product-item {
+    background: darkgrey;
+    width: 220px;
+    height: 300px;
+    border-radius: 20px;
+    text-align: center;
+    color: brown;
+}
+
+.product-item-img {
+    margin: 20px 0 0;
+    width: auto;
+    max-height: 100px;
+}
+
+.basket {
+    height: 100px;
+    background: brown;
+}
+
+.summaTotal {
+    color: whitesmoke;
+}
+
+.btn-cart {
+    height: 30px;
+    margin: 35px 35px 0 0;
+}
+
+.summaTotal {
+    margin: 40px 0 0 35px;
+}
