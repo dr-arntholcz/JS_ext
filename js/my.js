@@ -9,13 +9,13 @@ const products = [
 ///////////create object massive////////////
 
 ///////////init class basket///////////////////////
-class basket {
+class Basket {
     constructor(cssClassProductItem) {
             this.listProducts = [];
             this.listCount = this.listProducts.length;
         }
         ////////////metod calculate products
-    basket_sum() {
+    BasketSum() {
             this.sum = 0;
             this.listProducts.forEach((element) => {
                 this.sum += element.price
@@ -23,19 +23,19 @@ class basket {
             return this.sum;
         }
         ///////////////metod deleted products in basket//////
-    deleted_product_in_basket() {}
+    DeletedProductInBasket() {}
 }
 ///////////init class basket///////////////////////
-///////////init class basket_item//////////////////
-class basket_item {
+///////////init class BasketItem//////////////////
+class BasketItem {
     constructor() {}
 }
-///////////init class basket_item//////////////////
-///////////init class products_item//////////////////
-class products_item {
+///////////init class BasketItem//////////////////
+///////////init class ProductsItem//////////////////
+class ProductsItem {
     constructor() {}
         ///////////////metod apply even 'click' to buttons///////////////////////
-    add_product_to_basket() {
+    AddProductToBasket() {
             let ButtonProducts = document.querySelectorAll('.product-item > .by-btn');
             let SummaTotal = document.querySelector('.SummaTotal');
             for (let i = 0; i < ButtonProducts.length; i++) {
@@ -43,7 +43,7 @@ class products_item {
                     if (event.target.textContent === 'Добавить в корзину') {
                         event.target.textContent = 'Добавлено';
                         basket1.listProducts.push(products[i]);
-                        SummaTotal.innerHTML = `Итого: ${basket1.basket_sum()}р.`;
+                        SummaTotal.innerHTML = `Итого: ${basket1.BasketSum()}р.`;
                     }
                 });
 
@@ -51,7 +51,7 @@ class products_item {
         }
         ///////////////metod apply even 'click' to buttons///////////////////////
         ////////////////create metod for added products//////////////////
-    add_product_to_list(targetTag, targetObj) {
+    AddProductToList(targetTag, targetObj) {
         let insert = '',
             imgSrc = '';
         for (let i = 0; i < targetObj.length; i++) {
@@ -67,11 +67,11 @@ class products_item {
     };
     ////////////////create metod for added products//////////////////
 }
-///////////init class products_item//////////////////
+///////////init class ProductsItem//////////////////
 ///////////create object basket//////////////////
-let basket1 = new basket(),
-    ///////////create object products_item//////////////////
-    productItem1 = new products_item();
+let basket1 = new Basket(),
+    ///////////create object ProductsItem//////////////////
+    ProductItem1 = new ProductsItem();
 
-productItem1.add_product_to_list(document.querySelector('.products'), products);
-productItem1.add_product_to_basket();
+ProductItem1.AddProductToList(document.querySelector('.products'), products);
+ProductItem1.AddProductToBasket();
