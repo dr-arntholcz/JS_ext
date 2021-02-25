@@ -28,15 +28,12 @@
     background: brown;
 }
 
-.summaTotal {
+.SummaTotal {
     color: whitesmoke;
+    margin: 40px 0 0 35px;
 }
 
 .btn-cart {
     height: 30px;
     margin: 35px 35px 0 0;
-}
-
-.summaTotal {
-    margin: 40px 0 0 35px;
 }
