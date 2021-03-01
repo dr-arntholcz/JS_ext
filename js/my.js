@@ -1,28 +1,6 @@
 'use strict';
 const API = "https://raw.githubusercontent.com/dr-arntholcz/online-store-api/master/responses";
 
-let basket1 = new class Basket {
-    constructor(cssClassProductItem) {
-        this.listProducts = [];
-    }
-    listCount(listproducts) {
-        return listproducts.length;
-    }
-    basketSum() {
-        this.sum = 0;
-        this.listProducts.forEach((element) => {
-            this.sum += element.price
-        });
-        return this.sum;
-    }
-
-    deletedProductInBasket() {}
-}
-
-class BasketItem {
-    constructor() {}
-}
-
 let ProductItem1 = new class ProductsItem {
     constructor() {}
 
@@ -41,7 +19,7 @@ let ProductItem1 = new class ProductsItem {
         }
     }
 
-    addProductToList(targetTag, targetObj) {
+    addProductToList(targetTag, targetObj, buttonName = 'Добавить в корзину') {
         let insert = '',
             imgSrc = '';
         for (let i = 0; i < targetObj.length; i++) {
@@ -50,7 +28,7 @@ let ProductItem1 = new class ProductsItem {
     <img class="product-item-img" src="${imgSrc}">
                 <h3>${targetObj[i].title}</h3>
                 <p>${targetObj[i].price}</p>
-                <button class="by-btn">Добавить в корзину</button>
+                <button class="by-btn">${buttonName}</button>
               </div>`;
         };
         targetTag.innerHTML = insert;
@@ -82,24 +60,62 @@ let ProductItem1 = new class ProductsItem {
         });
     };
 }
-let products = ProductItem1.getProducts(`${API}/listProducts.json`, document.querySelector('.products'));
-///////////////////////////////////////////////////////////
-// var products = fetch(`${API}/listProducts.json`)
-// .then((response) =>
-//     response.json()
-// )
-// .then((data) => {
-//     // console.log(data);
-//     // products = data;
-//     return data;
-// })
-// .catch((error) => {
-//     console.log(error);
-// });
-/////////////////////////////////////////////////////////////////
-// Promise
+let basket1 = new class Basket {
+    constructor(cssClassProductItem) {
+        this.listProducts = [];
+        this.listProductsPreview = 'catalog';
 
-///////////////////////////////////////////////////////////////////////////////////
-// console.log(products);
-// ProductItem1.addProductToList(document.querySelector('.products'), products);
-// ProductItem1.addProductToBasket(products);
+    }
+    viewBasket(targetButtton, targetDiv, ProductItem) {
+        targetButtton.addEventListener('click', () => {
+            if (this.listProducts.length > 0 && this.listProductsPreview === 'catalog') {
+                targetButtton.textContent = 'Вернуться к выбору товаров';
+                // this.listProductsPreview = targetDiv.innerHTML;
+                targetDiv.innerHTML = '';
+                // console.log(this.listProducts);
+                ProductItem.addProductToList(targetDiv, this.listProducts, 'Удалить из корзины');
+                this.deletedProductInBasket(this.listProducts);
+                this.listProductsPreview = 'basket';
+            } else if (this.listProductsPreview === 'basket') {
+                targetButtton.textContent = 'Корзина';
+                // targetDiv.innerHTML = this.listProductsPreview;
+                // this.listProductsPreview = '';
+                ProductItem.getProducts(`${API}/listProducts.json`, document.querySelector('.products'));
+                this.listProductsPreview = 'catalog';
+            }
+        })
+    }
+    listCount(listproducts) {
+        return listproducts.length;
+    }
+    basketSum() {
+        this.sum = 0;
+        this.listProducts.forEach((element) => {
+            this.sum += element.price
+        });
+        return this.sum;
+    }
+
+    deletedProductInBasket(products) {
+        let ButtonProducts = document.querySelectorAll('.product-item > .by-btn');
+        let SummaTotal = document.querySelector('.SummaTotal');
+        for (let i = 0; i < ButtonProducts.length; i++) {
+            ButtonProducts[i].addEventListener('click', (event) => {
+                if (event.target.textContent === 'Добавить в корзину') {
+                    event.target.textContent = 'Добавлено';
+                    basket1.listProducts.push(products[i]);
+                    SummaTotal.innerHTML = `Итого: ${basket1.basketSum()}р.`;
+                }
+            });
+
+        }
+    }
+}
+
+class BasketItem {
+    constructor() {}
+}
+
+ProductItem1.getProducts(`${API}/listProducts.json`, document.querySelector('.products'));
+basket1.viewBasket(document.querySelector('.btn-cart'), document.querySelector('.products'), ProductItem1);
+///////////////////////////////////////////////////////////
