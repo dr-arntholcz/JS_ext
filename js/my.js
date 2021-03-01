@@ -1,6 +1,6 @@
 'use strict';
 const API = "https://raw.githubusercontent.com/dr-arntholcz/online-store-api/master/responses";
-
+const targetDiv = document.querySelector('.products');
 let ProductItem1 = new class ProductsItem {
     constructor() {}
 
@@ -20,6 +20,7 @@ let ProductItem1 = new class ProductsItem {
     }
 
     addProductToList(targetTag, targetObj, buttonName = 'Добавить в корзину') {
+        targetTag.innerHTML = '';
         let insert = '',
             imgSrc = '';
         for (let i = 0; i < targetObj.length; i++) {
@@ -74,13 +75,14 @@ let basket1 = new class Basket {
                 targetDiv.innerHTML = '';
                 // console.log(this.listProducts);
                 ProductItem.addProductToList(targetDiv, this.listProducts, 'Удалить из корзины');
-                this.deletedProductInBasket(this.listProducts);
+                this.deletedProductInBasket(this.listProducts, ProductItem, targetDiv);
                 this.listProductsPreview = 'basket';
+                // console.log(this.listProducts);
             } else if (this.listProductsPreview === 'basket') {
                 targetButtton.textContent = 'Корзина';
                 // targetDiv.innerHTML = this.listProductsPreview;
                 // this.listProductsPreview = '';
-                ProductItem.getProducts(`${API}/listProducts.json`, document.querySelector('.products'));
+                ProductItem.getProducts(`${API}/listProducts.json`, targetDiv);
                 this.listProductsPreview = 'catalog';
             }
         })
@@ -96,19 +98,22 @@ let basket1 = new class Basket {
         return this.sum;
     }
 
-    deletedProductInBasket(products) {
+    deletedProductInBasket(products, ProductItem, targetDiv) {
         let ButtonProducts = document.querySelectorAll('.product-item > .by-btn');
         let SummaTotal = document.querySelector('.SummaTotal');
         for (let i = 0; i < ButtonProducts.length; i++) {
-            ButtonProducts[i].addEventListener('click', (event) => {
-                if (event.target.textContent === 'Добавить в корзину') {
-                    event.target.textContent = 'Добавлено';
-                    basket1.listProducts.push(products[i]);
-                    SummaTotal.innerHTML = `Итого: ${basket1.basketSum()}р.`;
-                }
+            ButtonProducts[i].addEventListener('click', () => {
+                products.splice(i, 1);
+                ProductItem.addProductToList(targetDiv, products, 'Удалить из корзины');
+                SummaTotal.innerHTML = `Итого: ${this.basketSum()}р.`;
+                // console.log(this.listProducts);
+
+                // this.viewBasket(document.querySelector('.btn-cart'), targetDiv, ProductItem);
             });
 
         }
+
+
     }
 }
 
@@ -116,6 +121,6 @@ class BasketItem {
     constructor() {}
 }
 
-ProductItem1.getProducts(`${API}/listProducts.json`, document.querySelector('.products'));
-basket1.viewBasket(document.querySelector('.btn-cart'), document.querySelector('.products'), ProductItem1);
+ProductItem1.getProducts(`${API}/listProducts.json`, targetDiv);
+basket1.viewBasket(document.querySelector('.btn-cart'), targetDiv, ProductItem1);
 ///////////////////////////////////////////////////////////
