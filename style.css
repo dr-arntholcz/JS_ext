@@ -6,6 +6,7 @@
 .basket {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .product-item {
@@ -15,6 +16,7 @@
     border-radius: 20px;
     text-align: center;
     color: brown;
+    margin-bottom: 20px;
 }
 
 .product-item-img {

@@ -1,57 +1,47 @@
 'use strict';
-///////////create object massive////////////
-const products = [
-    { id: 1, title: 'Notebook', price: 20000, imgSrc: "img/1.jpg" },
-    { id: 2, title: 'Mouse', price: 1500 },
-    { id: 3, title: 'Keyboard', price: 5000, imgSrc: 'img/3.jpg' },
-    { id: 4, title: 'Gamepad', price: 4500 },
-];
-///////////create object massive////////////
+const API = "https://raw.githubusercontent.com/dr-arntholcz/online-store-api/master/responses";
 
-///////////init class basket///////////////////////
-class Basket {
+let basket1 = new class Basket {
     constructor(cssClassProductItem) {
-            this.listProducts = [];
-            this.listCount = this.listProducts.length;
-        }
-        ////////////metod calculate products
-    BasketSum() {
-            this.sum = 0;
-            this.listProducts.forEach((element) => {
-                this.sum += element.price
-            });
-            return this.sum;
-        }
-        ///////////////metod deleted products in basket//////
-    DeletedProductInBasket() {}
+        this.listProducts = [];
+    }
+    listCount(listproducts) {
+        return listproducts.length;
+    }
+    basketSum() {
+        this.sum = 0;
+        this.listProducts.forEach((element) => {
+            this.sum += element.price
+        });
+        return this.sum;
+    }
+
+    deletedProductInBasket() {}
 }
-///////////init class basket///////////////////////
-///////////init class BasketItem//////////////////
+
 class BasketItem {
     constructor() {}
 }
-///////////init class BasketItem//////////////////
-///////////init class ProductsItem//////////////////
-class ProductsItem {
-    constructor() {}
-        ///////////////metod apply even 'click' to buttons///////////////////////
-    AddProductToBasket() {
-            let ButtonProducts = document.querySelectorAll('.product-item > .by-btn');
-            let SummaTotal = document.querySelector('.SummaTotal');
-            for (let i = 0; i < ButtonProducts.length; i++) {
-                ButtonProducts[i].addEventListener('click', (event) => {
-                    if (event.target.textContent === 'Добавить в корзину') {
-                        event.target.textContent = 'Добавлено';
-                        basket1.listProducts.push(products[i]);
-                        SummaTotal.innerHTML = `Итого: ${basket1.BasketSum()}р.`;
-                    }
-                });
 
-            }
+let ProductItem1 = new class ProductsItem {
+    constructor() {}
+
+    addProductToBasket(products) {
+        let ButtonProducts = document.querySelectorAll('.product-item > .by-btn');
+        let SummaTotal = document.querySelector('.SummaTotal');
+        for (let i = 0; i < ButtonProducts.length; i++) {
+            ButtonProducts[i].addEventListener('click', (event) => {
+                if (event.target.textContent === 'Добавить в корзину') {
+                    event.target.textContent = 'Добавлено';
+                    basket1.listProducts.push(products[i]);
+                    SummaTotal.innerHTML = `Итого: ${basket1.basketSum()}р.`;
+                }
+            });
+
         }
-        ///////////////metod apply even 'click' to buttons///////////////////////
-        ////////////////create metod for added products//////////////////
-    AddProductToList(targetTag, targetObj) {
+    }
+
+    addProductToList(targetTag, targetObj) {
         let insert = '',
             imgSrc = '';
         for (let i = 0; i < targetObj.length; i++) {
@@ -65,13 +55,51 @@ class ProductsItem {
         };
         targetTag.innerHTML = insert;
     };
-    ////////////////create metod for added products//////////////////
-}
-///////////init class ProductsItem//////////////////
-///////////create object basket//////////////////
-let basket1 = new Basket(),
-    ///////////create object ProductsItem//////////////////
-    ProductItem1 = new ProductsItem();
 
-ProductItem1.AddProductToList(document.querySelector('.products'), products);
-ProductItem1.AddProductToBasket();
+    getProducts = (url, target) => {
+        return new Promise((resolve, reject) => {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true); // true - асинхронный запрос
+            xhr.onreadystatechange = () => {
+                // xhr.readyState
+                // 0 - запрос не инициализирован
+                // 1 - загрузка данных
+                // 2 - запрос принят сервером
+                // 3 - идет обмен данными
+                // 4 - запрос выполнен
+                if (xhr.readyState !== 4) return;
+                if (xhr.status !== 200) {
+                    console.log('Error ' + xhr.status + ' ' + xhr.statusText);
+                } else {
+                    // console.log('Ok! ', xhr.responseText);
+                    let data = JSON.parse(xhr.responseText);
+                    // console.log(data);
+                    this.addProductToList(target, data);
+                    this.addProductToBasket(data)
+                }
+            }
+            xhr.send();
+        });
+    };
+}
+let products = ProductItem1.getProducts(`${API}/listProducts.json`, document.querySelector('.products'));
+///////////////////////////////////////////////////////////
+// var products = fetch(`${API}/listProducts.json`)
+// .then((response) =>
+//     response.json()
+// )
+// .then((data) => {
+//     // console.log(data);
+//     // products = data;
+//     return data;
+// })
+// .catch((error) => {
+//     console.log(error);
+// });
+/////////////////////////////////////////////////////////////////
+// Promise
+
+///////////////////////////////////////////////////////////////////////////////////
+// console.log(products);
+// ProductItem1.addProductToList(document.querySelector('.products'), products);
+// ProductItem1.addProductToBasket(products);
