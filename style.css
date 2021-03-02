@@ -6,6 +6,7 @@
 .basket {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .product-item {
@@ -15,6 +16,7 @@
     border-radius: 20px;
     text-align: center;
     color: brown;
+    margin-bottom: 20px;
 }
 
 .product-item-img {
@@ -28,15 +30,12 @@
     background: brown;
 }
 
-.summaTotal {
+.SummaTotal {
     color: whitesmoke;
+    margin: 40px 0 0 35px;
 }
 
 .btn-cart {
     height: 30px;
     margin: 35px 35px 0 0;
-}
-
-.summaTotal {
-    margin: 40px 0 0 35px;
 }
